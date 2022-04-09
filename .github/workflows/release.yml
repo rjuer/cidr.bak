@@ -20,20 +20,16 @@ jobs:
         run: |
           mkdir dist
           go build -o dist/
-      # - name: Get commits since last release
-      #   run: |
-      #     COMMITS=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:'- %s' --no-merges)
-      #     echo "::set-env name=COMMITS::$COMMITS"
+          chmod +x dist/cidr
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: cidr
           path: dist/cidr
       - name: Release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v0.0.1
-          release_name: v0.0.1
-          # body: |
-          #   Changes:
-          #     ${{ env.COMMITS }}
+          name: v0.0.1
