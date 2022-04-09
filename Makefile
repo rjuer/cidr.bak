@@ -1,5 +1,5 @@
 build:
-	go build -o bin/cidr
+	go build -o out/cidr
 
 update:
 	go mod tidy

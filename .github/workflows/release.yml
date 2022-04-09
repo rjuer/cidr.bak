@@ -17,7 +17,9 @@ jobs:
         with:
           go-version: 1.17
       - name: Build
-        run: go build -o /bin/cidr
+        run: |
+          mkdir dist
+          go build -o dist/
       - name: Get commits since last release
         run: |
           COMMITS=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:'- %s' --no-merges)
@@ -26,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: cidr
-          path: bin/cidr
+          path: dist/cidr
       - name: Release
         uses: actions/create-release@v1
         with:
