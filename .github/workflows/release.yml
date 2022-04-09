@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  release:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Go toolchain
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+      - name: Build
+        run: go build -jo /bin/cidr
+      - name: Get commits since last release
+        run: |
+          COMMITS=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:'- %s' --no-merges)
+          echo "::set-env name=COMMITS::$COMMITS"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: cidr
+          path: bin/cidr
+      - name: Release
+        uses: actions/create-release@v1
+        with:
+          tag_name: v0.0.1
+          release_name: v0.0.1
+          body: |
+            Changes:
+              ${{ env.COMMITS }}
