@@ -17,7 +17,7 @@ jobs:
         with:
           go-version: 1.17
       - name: Build
-        run: go build -jo /bin/cidr
+        run: go build -o /bin/cidr
       - name: Get commits since last release
         run: |
           COMMITS=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:'- %s' --no-merges)
